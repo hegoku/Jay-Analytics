@@ -38,14 +38,14 @@ if (ja_cookie!=null && ja_cookie!=""){
 }
 
 var ja_ajax=new XMLHttpRequest();
-ja_ajax.open("POST","<?php echo env('APP_URL');?>/page",true);
+ja_ajax.open("POST","<?php echo env('APP_URL');?>/api/page",true);
 ja_ajax.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 ja_ajax.withCredentials = true;
 var ja_params={};
 ja_params.cookie=ja_cookie;
 if(document){
-  ja_params.url=document.URL || 'null';
-  ja_params.referrer = document.referrer || 'null';
+  ja_params.url=document.URL || '';
+  ja_params.referrer = document.referrer || '';
 }
 
 //解析_maq配置
@@ -76,7 +76,7 @@ ja_ajax.send(ja_args);
 //事件
 $.ja.sendEvent=function(action,extra){
 	var ja_ajax=new XMLHttpRequest();
-	ja_ajax.open("POST","<?php echo env('APP_URL');?>/event",true);
+	ja_ajax.open("POST","<?php echo env('APP_URL');?>/api/event",true);
 	ja_ajax.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	ja_ajax.withCredentials = true;
 	var ja_args='';

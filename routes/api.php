@@ -16,4 +16,4 @@ use Illuminate\Http\Request;
 Route::post('/page', 'Collector\PageController@index');
 Route::post('/event', 'Collector\EventController@index');
 
-Route::get('/project','Admin\ProjectController@add');
+Route::post('/project','Admin\ProjectController@add');
