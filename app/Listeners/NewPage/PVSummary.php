@@ -27,20 +27,13 @@ class PVSummary
      */
     public function handle(NewPageEvent $event)
     {
-        /*DB::collection('summary_pv_hour')->raw(function($collection) use ($event) {
-            $collection->update([
-                [
-                    'project_id'=>$event->page->project_id,
-                    'create_time'=>(int)Date("YmdH",strtotime($event->page->created_at))
-                ],
-                ['$inc'=>["pv"=>1]],
-                ['upsert'=>true]
-            ]);
-        });*/
-        DB::collection('summary_pv_hour')->where([
-            'project_id'=>$event->page->project_id,
-            'create_time'=>(int)Date("YmdH",strtotime($event->page->created_at))
-        ])->update(
+        DB::collection('summary_pv_hour')->whereRaw(
+            [
+                '$isolated'=>1,
+                'project_id'=>$event->page->project_id,
+                'create_time'=>(int)Date("YmdH",strtotime($event->page->created_at))
+            ]
+        )->update(
             ['$inc'=>["pv"=>1]],
             ['upsert'=>true]
         );

@@ -14,7 +14,7 @@ class CreateSummaryPuvHourIndex extends Migration
     public function up()
     {
         Schema::connection('mongodb')->table('summary_pv_hour', function (Blueprint $collection) {
-            $collection->index(['project_id','create_time']);
+            $collection->unique(['project_id','create_time']);
         });
     }
 
