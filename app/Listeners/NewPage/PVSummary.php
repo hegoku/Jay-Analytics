@@ -37,6 +37,39 @@ class PVSummary
             ['$inc'=>["pv"=>1]],
             ['upsert'=>true]
         );
+        
+        DB::collection('summary_pv_day')->whereRaw(
+            [
+                '$isolated'=>1,
+                'project_id'=>$event->page->project_id,
+                'create_time'=>(int)Date("Ymd",strtotime($event->page->created_at))
+            ]
+        )->update(
+            ['$inc'=>["pv"=>1]],
+            ['upsert'=>true]
+        );
+        
+        DB::collection('summary_pv_month')->whereRaw(
+            [
+                '$isolated'=>1,
+                'project_id'=>$event->page->project_id,
+                'create_time'=>(int)Date("Ym",strtotime($event->page->created_at))
+            ]
+        )->update(
+            ['$inc'=>["pv"=>1]],
+            ['upsert'=>true]
+        );
+        
+        DB::collection('summary_pv_year')->whereRaw(
+            [
+                '$isolated'=>1,
+                'project_id'=>$event->page->project_id,
+                'create_time'=>(int)Date("Y",strtotime($event->page->created_at))
+            ]
+        )->update(
+            ['$inc'=>["pv"=>1]],
+            ['upsert'=>true]
+        );
 
     }
 }
