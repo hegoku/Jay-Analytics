@@ -14,7 +14,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         'App\Events\NewPageEvent' => [
-            'App\Listeners\NewPage\PVSummary',
+            'App\Listeners\NewPage\Summary',
         ],
     ];
 

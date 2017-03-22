@@ -33,7 +33,7 @@ class PageController extends Controller
         }
 
         $page=new Page;
-        $page->project_id=$project->_id;
+        $page->project_id=new \MongoDB\BSON\ObjectID($project->_id);
         $page->url=$request->input('url');
         $page->referrer=$request->input('referrer','');
         $page->ip=$this->getIP();
