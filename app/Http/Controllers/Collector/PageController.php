@@ -9,6 +9,8 @@ use App\Models\Project;
 use App\Models\Page;
 use App\Models\Cookie;
 use App\Events\NewPageEvent;
+use App\Library\IP;
+use App\Library\UA;
 
 class PageController extends Controller
 {
@@ -36,7 +38,7 @@ class PageController extends Controller
         $page->project_id=new \MongoDB\BSON\ObjectID($project->_id);
         $page->url=$request->input('url');
         $page->referrer=$request->input('referrer','');
-        $page->ip=$this->getIP();
+        $page->ip=IP::get();
         $page->created_at=Date("Y-m-d H:i:s");
 
         $page->cookie=new Cookie();
@@ -50,6 +52,14 @@ class PageController extends Controller
             $page->cookie->current_session=(int)$cookies[3];
             $page->cookie->session_counter=(int)$cookies[4];
         }
+
+        $ua = new UA($_SERVER['HTTP_USER_AGENT']);
+        $page->platform=$ua->platform();
+        $page->mobile=$ua->mobile();
+        $page->browser=[
+            'name'=>$ua->browser(),
+            'version'=>$ua->version()
+        ];
 
         /*$data=[
             'url'=>Request::input('url','null'),
@@ -79,41 +89,4 @@ class PageController extends Controller
 
     }
 
-    protected function getIP()
-    {
-        $realip = NULL;
-        if ($realip !== NULL) return $realip;
-        if (isset($_SERVER)) {
-            if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                $arr = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-                /* 取X-Forwarded-For中第一个非unknown的有效IP字符串 */
-                foreach ($arr AS $ip) {
-                    $ip = trim($ip);
-                    if ($ip != 'unknown') {
-                        $realip = $ip;
-                        break;
-                    }
-                }
-            } elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
-                $realip = $_SERVER['HTTP_CLIENT_IP'];
-            } else{
-                if (isset($_SERVER['REMOTE_ADDR'])) {
-                    $realip = $_SERVER['REMOTE_ADDR'];
-                }else{
-                    $realip = '0.0.0.0';
-                }
-            }
-        }else{
-            if (getenv('HTTP_X_FORWARDED_FOR')) {
-                $realip = getenv('HTTP_X_FORWARDED_FOR');
-            } elseif (getenv('HTTP_CLIENT_IP')) {
-                $realip = getenv('HTTP_CLIENT_IP');
-            } else {
-                $realip = getenv('REMOTE_ADDR');
-            }
-        }
-            preg_match("/[\d\.]{7,15}/", $realip, $onlineip);
-            $realip = !empty($onlineip[0]) ? $onlineip[0] : '0.0.0.0';
-            return $realip;
-    }
 }
