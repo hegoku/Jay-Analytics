@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Listeners\NewPage;
+namespace App\Listeners;
 
 use App\Events\NewPageEvent;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\DB;
 use App\Mongodb;
+use App\Events\NewUVEvent;
 
 class Summary
 {
+    public $isNewUV=false;
     /**
      * Create the event listener.
      *
@@ -32,6 +34,10 @@ class Summary
         $this->updatePV('day', "Ymd", $event);
         $this->updatePV('month', "Ym", $event);
         $this->updatePV('year', "Y", $event);
+
+        if ($this->isNewUV) {
+            event(new NewUVEvent($event->page));
+        }
     }
 
     private function updatePV($table_date, $date, $event)
@@ -49,8 +55,9 @@ class Summary
         $inc=["pv"=>1];
         if ($this->checkUV($table_date, $date, $event)>0) {
             $inc["uv"]=1;
+            $this->isNewUV=true;
         }
-        
+
         Mongodb::getInstance()->collection('summary_'.$table_date)->update(
             [
                 '$isolated'=>1,
@@ -61,7 +68,7 @@ class Summary
             ['upsert'=>true]
         );
     }
-    
+
     private function checkUV($table_date, $date, $event)
     {
         $result=Mongodb::getInstance()->collection('summary_uv_'.$table_date)->update(

@@ -25,7 +25,7 @@ class CreateSummaryIndex extends Migration
         Schema::connection('mongodb')->table('summary_year', function (Blueprint $collection) {
             $collection->unique(['project_id','create_time']);
         });
-        
+
         Schema::connection('mongodb')->table('summary_uv_hour', function (Blueprint $collection) {
             $collection->unique(['project_id','create_time','visiter_id']);
         });
@@ -37,6 +37,16 @@ class CreateSummaryIndex extends Migration
         });
         Schema::connection('mongodb')->table('summary_uv_year', function (Blueprint $collection) {
             $collection->unique(['project_id','create_time','visiter_id']);
+        });
+
+        Schema::connection('mongodb')->table('summary_browser_day', function (Blueprint $collection) {
+            $collection->unique(['project_id','create_time','browser']);
+        });
+        Schema::connection('mongodb')->table('summary_browser_month', function (Blueprint $collection) {
+            $collection->unique(['project_id','create_time','browser']);
+        });
+        Schema::connection('mongodb')->table('summary_browser_year', function (Blueprint $collection) {
+            $collection->unique(['project_id','create_time','browser']);
         });
     }
 

@@ -47,6 +47,11 @@ if(document){
   ja_params.url=document.URL || '';
   ja_params.referrer = document.referrer || '';
 }
+if(window && window.screen) {
+  ja_params.sh = window.screen.height || 0;
+  ja_params.sw = window.screen.width || 0;
+  ja_params.cd = window.screen.colorDepth || 0;
+}
 
 //解析_maq配置
 if(__ja) {

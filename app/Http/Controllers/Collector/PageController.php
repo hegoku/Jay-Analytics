@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\Page;
 use App\Models\Cookie;
+use App\Models\Browser;
+use App\Models\Screen;
 use App\Events\NewPageEvent;
 use App\Library\IP;
 use App\Library\UA;
@@ -53,13 +55,17 @@ class PageController extends Controller
             $page->cookie->session_counter=(int)$cookies[4];
         }
 
+        $page->screen=new Screen();
+        $page->screen->width=(int)$request->input('sh',0);
+        $page->screen->height=(int)$request->input('sw',0);
+        $page->screen->color_depth=(int)$request->input('cd',0);
+
         $ua = new UA($_SERVER['HTTP_USER_AGENT']);
         $page->platform=$ua->platform();
         $page->mobile=$ua->mobile();
-        $page->browser=[
-            'name'=>$ua->browser(),
-            'version'=>$ua->version()
-        ];
+        $page->browser=new Browser();
+        $page->browser->name=$ua->browser();
+        $page->browser->version=$ua->version();
 
         /*$data=[
             'url'=>Request::input('url','null'),
