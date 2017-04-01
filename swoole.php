@@ -16,7 +16,7 @@ $http->on('WorkerStop', function ($serv, $worker_id){
 $http->on('request', function ($request, $response) use($kernel,$http,$public_dir) {
     echo memory_get_usage()."\n";
     setGlobal($request);
-    if (file_exists($public_dir.$_SERVER['REQUEST_URI'])) {
+    if (is_file($public_dir.$_SERVER['REQUEST_URI'])) {
         $response->end(file_get_contents($public_dir.$_SERVER['REQUEST_URI']));
         return;
     }

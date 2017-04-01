@@ -12,3 +12,11 @@
 */
 
 Route::get('/analytics.js', 'Collector\PageController@js');
+
+Route::get('/', 'Admin\ProjectController@index');
+
+Route::group(['namespace'=>'Admin'], function() {
+    Route::post('/project','ProjectController@add');
+
+    Route::get('/project/{project}/page','PageController@page');
+});

@@ -17,9 +17,14 @@ class ProjectController extends Controller
         return response()->json(['code'=>200]);
     }
 
-    public function index()
+    public function list1()
     {
         $data=Project::all();
         return response()->json(['code'=>200,'data'=>$data]);
+    }
+    
+    public function index()
+    {
+        return view('admin.index');
     }
 }

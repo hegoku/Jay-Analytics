@@ -45,4 +45,10 @@ class Mongodb
         //$writeConcern = new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 100);
         return $this->manager->executeBulkWrite($this->database.'.'.$this->collection, $bulk);
     }
+    
+    public function query($filter,$options=[])
+    {
+        $query = new \MongoDB\Driver\Query($filter, $options);
+        return $this->manager->executeQuery($this->database.'.'.$this->collection, $query);
+    }
 }
